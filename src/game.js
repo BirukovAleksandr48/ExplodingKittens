@@ -1,13 +1,19 @@
 const { ACTION_TYPES, CARDS, TAGS } = require('./constants');
-const { createGameRules, ruleNames } = require('./rules');
+const rules = require('./rules');
 const _ = require('lodash');
 const DeckRepository = require('./repositories/deck');
+const uuid = require('uuid');
 
 module.exports = class Game {
 
-  constructor (rule = 'STANDARD') {
+  constructor (name, host, rule = 'STANDARD') {
     this._deckRepository = new DeckRepository();
-    this.gameRules = null;
+
+    this.id = uuid();
+    this.name = name;
+    this.hostId = host.id;
+    this.gameRules = new rules[rule]();
+    this.started = false;
     this.state = {
       direction: 'forward',
       interaction: null,
@@ -18,10 +24,21 @@ module.exports = class Game {
       nextPlayerSequence: [],
     };
     this.actions = [];
+
+    this.join(host);
   }
 
   join (player) {
-    this.state.players.push(player);
+    if (this.gameRules.maxPlayers === this.state.players.length) {
+      throw new Error('No more places.');
+    }
+
+    player.playGameId = this.id;
+    this.state.players.push({
+      id: player.id,
+      name: player.name,
+      cards: []
+    });
   };
 
   left (playerId) {
@@ -29,25 +46,31 @@ module.exports = class Game {
   };
 
   start () {
-    this.gameRules = createGameRules(ruleNames.STANDARD, this.state.players.length);
+
+    if (this.state.players.length < 2) {
+      throw new Error('Too few players.');
+    }
 
     const { players, deck } = this._deckRepository.dealCards(this.gameRules, this.state.players);
     const currentPlayerId = _.head(players).id;
 
+    this.started = true;
     this.state = {
       ...this.state,
       players,
       deck,
       currentPlayerId,
     };
+    console.log('Game started. Deck: ', this.state.deck);
   };
 
   /**
-   * @param {{ type: string, cardId?: number, playerId: number}} action
+   * @param {{ type: string, cardId?: number, playerId: string, gameId: string }} action
    */
   exec (action) {
     const curState = _.cloneDeep(this.state);
     const preparedAction = this.prepareAction(action, curState);
+    const changes = [];
 
     switch (preparedAction.type) {
       case ACTION_TYPES.END_OF_TURN: {
@@ -69,13 +92,14 @@ module.exports = class Game {
       }
     }
 
-    this.gameRules.handle(preparedAction, curState);
+    this.gameRules.handle(preparedAction, curState, changes);
     this.actions.push({
       ...action,
       stateBefore: this.state,
     });
     this.state = curState;
-    console.log(this.state)
+    console.log(this.state);
+    return changes;
   }
 
   prepareAction (action, state) {

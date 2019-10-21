@@ -1,6 +1,7 @@
 const _ = require('lodash');
+const { playerEndTheTurn } = require('../../../changes');
 
-module.exports = (action, state) => {
+module.exports = (action, state, changes) => {
     if (state.nextPlayerSequence.length) {
         state.currentPlayerId = state.nextPlayerSequence.shift();
     } else {
@@ -19,4 +20,5 @@ module.exports = (action, state) => {
         }
         state.currentPlayerId = nextPlayer.id;
     }
+    changes.push(new playerEndTheTurn(action.gameId, action.player.id));
 };

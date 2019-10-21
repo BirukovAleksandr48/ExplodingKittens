@@ -27,17 +27,12 @@ module.exports = class DeckRepository {
      * This method mutates arguments!
      */
     dealCards (gameRules, players) {
-        if (players.length > gameRules.maxPlayers) {
-            throw new Error('Too many players.');
-        }
-        if (players.length < 2) {
-            throw new Error('Too few players.');
-        }
-
         let totalCardsForPlayer = 0;
+        const template = gameRules.template(players.length);
+        debugger;
         _.map(gameRules.starterCards.template, (requiredCount, requiredCardName) => {
-            gameRules.template[requiredCardName] -= requiredCount * players.length;
-            if (gameRules.template[requiredCardName] < 0) {
+            template[requiredCardName] -= requiredCount * players.length;
+            if (template[requiredCardName] < 0) {
                 throw new Error(`Too few "${requiredCardName}" cards.`);
             }
 
@@ -57,7 +52,7 @@ module.exports = class DeckRepository {
             throw new Error('Too many starter cards per player.')
         }
 
-        const deck = this.createDeck(gameRules.template);
+        const deck = this.createDeck(template);
         this.shuffle(deck);
 
         _.map(players, player => {

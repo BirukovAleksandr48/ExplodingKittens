@@ -21,6 +21,8 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
+    socket.emit('i_am_here', 'Chrome');
+    socket.on('player_become_online', console.log);
 </script>
 </body>
 </html>
