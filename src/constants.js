@@ -8,6 +8,20 @@ const TAGS = {
     KILL_PLAYER: 7,
 };
 
+const REQUEST_ACTIONS = {
+    I_AM_HERE: 'i_am_here',
+    CREATE_GAME: 'create_game',
+    JOIN_GAME: 'join_game',
+    START_GAME: 'start_game',
+    END_OF_TURN: 'end_of_turn',
+    DISCONNECT: 'disconnect',
+};
+
+const ROOMS = {
+    GAME_FINDERS: 'GAME_FINDERS',
+    GAME: (id) => `game_${id}`,
+};
+
 const CARDS = {
     BOMB: {
         id: 1,
@@ -61,4 +75,6 @@ module.exports = {
     TAGS,
     CARDS,
     ACTION_TYPES,
+    REQUEST_ACTIONS,
+    ROOMS,
 };

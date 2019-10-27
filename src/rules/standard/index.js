@@ -1,5 +1,4 @@
-const { ACTION_TYPES, CARDS } = require('../../constants');
-const { passTheTurnToNextPlayer, takeCardFromTheDeck } = require('./utils');
+const { CARDS } = require('../../constants');
 const _ = require('lodash');
 
 module.exports = class StandardRules {
@@ -27,17 +26,4 @@ module.exports = class StandardRules {
         };
     }
 
-    handle (action, state, changes) {
-        switch (action.type) {
-            case ACTION_TYPES.END_OF_TURN: {
-                takeCardFromTheDeck(action, state, changes);
-                passTheTurnToNextPlayer(action, state, changes);
-                break;
-            }
-            case ACTION_TYPES.PLAY_CARD: {
-
-                break;
-            }
-        }
-    }
 };

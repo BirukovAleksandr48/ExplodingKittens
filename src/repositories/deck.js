@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { CARDS } = require('../constants');
+const errors = require('../errors');
 
 module.exports = class DeckRepository {
 
@@ -33,7 +34,7 @@ module.exports = class DeckRepository {
         _.map(gameRules.starterCards.template, (requiredCount, requiredCardName) => {
             template[requiredCardName] -= requiredCount * players.length;
             if (template[requiredCardName] < 0) {
-                throw new Error(`Too few "${requiredCardName}" cards.`);
+                throw errors.GameRulesError(`Too few "${requiredCardName}" cards.`);
             }
 
             const requiredCards = [];
@@ -49,7 +50,7 @@ module.exports = class DeckRepository {
         });
 
         if (totalCardsForPlayer > gameRules.starterCards.totalCount) {
-            throw new Error('Too many starter cards per player.')
+            throw errors.GameRulesError('Too many starter cards per player.')
         }
 
         const deck = this.createDeck(template);
@@ -66,7 +67,7 @@ module.exports = class DeckRepository {
         for (let i = 0; i < count; i++) {
             const index = deck.findIndex(cardId => cardId !== CARDS.BOMB.id);
             if (index === -1) {
-                throw new Error('Not enough common cards.')
+                throw errors.GameRulesError('Not enough common cards.')
             }
             player.cards.push(_.head(deck.splice(index, 1)));
         }
