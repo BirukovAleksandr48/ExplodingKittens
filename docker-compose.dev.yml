@@ -3,10 +3,10 @@ services:
 
   backend-dev:
     build:
-      context: ./src
+      context: ./
       dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
       - 9229:9229
     volumes:
-      - ./src:/src
+      - ./:/project

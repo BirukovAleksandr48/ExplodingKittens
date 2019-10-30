@@ -1,0 +1,23 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-eslint-rules"
+  ],
+  "rules": {
+    "quotemark": [true, "single"],
+    "space-before-function-paren": [true, "always"],
+    "no-console": false,
+    "object-literal-sort-keys": false,
+    "arrow-parens": false,
+    "max-line-length": {
+      "options": [120]
+    },
+    "ordered-imports": false,
+    "interface-over-type-literal": false,
+    "member-ordering": false,
+    "whitespace": [true, "check-module"],
+    "no-misused-new": false,
+    "space-within-parens": true,
+    "object-curly-spacing": true
+  }
+}

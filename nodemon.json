@@ -1,0 +1,10 @@
+{
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    ".git",
+    "node_modules"
+  ],
+  "exec": "node --inspect=0.0.0.0 -r ts-node/register ./src/index.ts",
+  "ext": "ts"
+}
