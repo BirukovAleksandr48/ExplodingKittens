@@ -15,11 +15,9 @@ export default class Disconnect implements IActionHandler {
 
     public run (games: IGame[], users: MUser[], current: MCurrent, changes: INotifier[], payload) {
 
-        const gameId = current.game.id;
         current.game.leave(current.user.id);
-        current.socket.leave(ROOMS.GAME(current.game.id));
+        changes.push(new LeaveTheGame(current.game.id, current.user.id));
         delete current.game;
-        changes.push(new LeaveTheGame(gameId, current.user.id));
 
         console.log(`Player ${current.user.name} disconnected`);
     }

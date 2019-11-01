@@ -21,7 +21,6 @@ export default class CreateGame implements IActionHandler {
         current.game = game;
         games.push(game);
 
-        current.game = game;
         current.socket.join(ROOMS.GAME(game.id));
         current.socket.leave(ROOMS.GAME_FINDERS);
 
