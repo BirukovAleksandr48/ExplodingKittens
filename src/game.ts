@@ -1,8 +1,8 @@
-import rules from './rules';
+import gameRules from './rules';
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import errors from './errors';
-import { IGame, MAction, MGameParticipant, MGameState, } from './models/game';
+import { IGame, MAction, MGameParticipant, MGameState } from './models/game';
 import { MUser } from './models/user';
 import { IRule } from './models/rules';
 import { dealCards } from './repositories/deck';
@@ -16,14 +16,15 @@ export default class Game implements IGame {
     public state: MGameState;
     public actions: MAction[] = [];
     public participants: MGameParticipant[] = [];
+    public rules: IRule = new gameRules.STANDARD();
 
-    constructor (public name: string, host: MUser, public gameRules: IRule = new rules.STANDARD()) {
+    constructor (public name: string, host: MUser) {
         this.hostId = host.id;
         this.join(host);
     }
 
     public join (user: MUser) {
-        if (this.gameRules.maxPlayers === this.state.players.length) {
+        if (this.rules.maxPlayers === this.participants.length) {
             throw errors.GameRulesError('No more places.');
         }
 
@@ -43,7 +44,7 @@ export default class Game implements IGame {
             throw errors.GameRulesError('Too few players.');
         }
 
-        const { players, deck } = dealCards(this.gameRules, this.participants);
+        const { players, deck } = dealCards(this.rules, this.participants);
         const currentPlayerId: string = _.head(players).id;
 
         this.status = EGameStatus.PLAY;

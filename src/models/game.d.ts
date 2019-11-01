@@ -30,7 +30,7 @@ export interface IGame {
     id: string;
     name: string;
     hostId: string;
-    gameRules: IRule;
+    rules: IRule;
     status: EGameStatus;
     state: MGameState;
     actions: MAction[];

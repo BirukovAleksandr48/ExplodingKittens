@@ -15,7 +15,7 @@ export default class BecomeOnline implements INotifier {
             id: g.id,
             name: g.name,
             hostId: g.hostId,
-            maxPlayers: g.gameRules.maxPlayers,
+            maxPlayers: g.rules.maxPlayers,
             participants: g.participants,
         }));
 

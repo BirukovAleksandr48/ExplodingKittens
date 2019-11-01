@@ -3,6 +3,7 @@ import { createDeck, dealCards, getCardsFromDeck, shuffle } from './deck';
 import { CARDS, EPlayerStatus } from '../constants';
 import { MDeck, MGameParticipant, MPlayer } from '../models/game';
 import { IRule } from '../models/rules';
+import gameRules from '../rules';
 
 describe('repositories/deck', () => {
 
@@ -74,27 +75,11 @@ describe('repositories/deck', () => {
     });
 
     describe('dealCards', () => {
-        let gameRules: IRule;
+        let rules: IRule;
         let participants: MGameParticipant[];
 
         beforeEach(() => {
-            gameRules = {
-                maxPlayers: 5,
-                starterCards: {
-                    totalCount: 5,
-                    template: {
-                        [CARDS.SAPPER.name]: 1,
-                    },
-                },
-                template: (playersCount => {
-                    return {
-                        [CARDS.BOMB.name]: playersCount + 4,
-                        [CARDS.SAPPER.name]: playersCount + 2,
-                        [CARDS.CHANGE_THE_FUTURE.name]: 6,
-                        [CARDS.CHANGE_DIRECTION.name]: 6,
-                    };
-                }),
-            };
+            rules = new gameRules.STANDARD();
             participants = [
                 {
                     id: 'aa',
@@ -115,33 +100,10 @@ describe('repositories/deck', () => {
         });
 
         it('common case', () => {
-            const { players, deck } = dealCards(gameRules, participants);
-            assert.equal(deck.length, 9);
+            const { players, deck } = dealCards(rules, participants);
+            assert.equal(deck.length, 27);
             assert.equal(players[0].cards.length, 5);
         });
 
-        it('too few SAPPER cards in the deck', () => {
-            gameRules.starterCards.template = {
-                [CARDS.SAPPER.name]: 10, // too many
-            };
-            let result;
-            try {
-                result = dealCards(gameRules, participants);
-                assert.isUndefined(result);
-            } catch (err) {
-                assert.equal(err.error, 'GameRulesError');
-            }
-        });
-
-        it('too many starter cards per player.', () => {
-            gameRules.starterCards.totalCount = 10;
-            let result;
-            try {
-                result = dealCards(gameRules, participants);
-                assert.isUndefined(result);
-            } catch (err) {
-                assert.equal(err.error, 'GameRulesError');
-            }
-        });
     });
 });

@@ -4,7 +4,6 @@ import { MUser } from '../models/user';
 import { MCurrent } from '../models/current';
 import { INotifier } from '../models/notifier';
 import * as Joi from '@hapi/joi';
-import { ROOMS } from '../constants';
 import { LeaveTheGame } from '../changes';
 
 export default class Disconnect implements IActionHandler {
@@ -19,7 +18,7 @@ export default class Disconnect implements IActionHandler {
         changes.push(new LeaveTheGame(current.game.id, current.user.id));
         delete current.game;
 
-        console.log(`Player ${current.user.name} disconnected`);
+        console.log(`Player ${current.user.id} disconnected`);
     }
 
 }

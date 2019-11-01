@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import { CARDS, EPlayerStatus } from '../constants';
-import errors from '../errors';
 import { IRule, MTemplate } from '../models/rules';
 import { MDeck, MGameParticipant, MPlayer } from '../models/game';
 
@@ -27,18 +26,21 @@ const createDeck = (template: MTemplate) => {
 };
 
 const getCardsFromDeck = (deck: MDeck, player: MPlayer, count = 1) => {
+
+    if (deck.length < count) {
+        count = deck.length;
+    }
     for (let i = 0; i < count; i++) {
         const index = deck.findIndex(cardId => cardId !== CARDS.BOMB.id);
-        if (index === -1) {
-            throw errors.GameRulesError('Not enough common cards.');
-        }
         player.cards.push(_.head(deck.splice(index, 1)));
     }
 };
 
 const dealCards = (gameRules: IRule, participants: MGameParticipant[]) => {
+
     let totalCardsForPlayer = 0;
-    const template = gameRules.template(participants.length);
+    const deckTemplate = gameRules.deckTemplate.get({ playersCount: participants.length });
+    const starterTemplate = gameRules.starterTemplate.get();
 
     const players: MPlayer[] = _.map(participants, user => ({
         id: user.id,
@@ -46,11 +48,8 @@ const dealCards = (gameRules: IRule, participants: MGameParticipant[]) => {
         status: EPlayerStatus.PLAY,
     }));
 
-    _.map(gameRules.starterCards.template, (requiredCount, requiredCardName) => {
-        template[requiredCardName] -= requiredCount * participants.length;
-        if (template[requiredCardName] < 0) {
-            throw errors.GameRulesError(`Too few "${requiredCardName}" cards.`);
-        }
+    _.map(starterTemplate, (requiredCount, requiredCardName) => {
+        deckTemplate[requiredCardName] -= requiredCount * participants.length;
 
         const requiredCards = [];
         for (let i = 0; i < requiredCount; i++) {
@@ -63,16 +62,11 @@ const dealCards = (gameRules: IRule, participants: MGameParticipant[]) => {
 
         totalCardsForPlayer += requiredCount;
     });
-
-    if (totalCardsForPlayer > gameRules.starterCards.totalCount) {
-        throw errors.GameRulesError('Too many starter cards per player.');
-    }
-
-    const deck = createDeck(template);
+    const deck = createDeck(deckTemplate);
     shuffle(deck);
 
     _.map(players, player => {
-        getCardsFromDeck(deck, player, gameRules.starterCards.totalCount - totalCardsForPlayer);
+        getCardsFromDeck(deck, player, gameRules.starterCardsCount - totalCardsForPlayer);
     });
 
     return { players, deck };

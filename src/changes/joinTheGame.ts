@@ -17,7 +17,7 @@ export default class JoinTheGame implements INotifier {
             id: this.game.id,
             name: this.game.name,
             hostId: this.game.hostId,
-            maxPlayers: this.game.gameRules.maxPlayers,
+            maxPlayers: this.game.rules.maxPlayers,
             participants: this.game.participants,
         };
 

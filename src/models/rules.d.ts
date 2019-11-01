@@ -1,12 +1,12 @@
+import { IResetter } from './resetter';
+
 export type MTemplate = {
     [p: string]: number;
 };
 
 export interface IRule {
     maxPlayers: number;
-    starterCards: {
-        totalCount: number;
-        template: MTemplate;
-    };
-    template (playersCount: number): MTemplate;
+    starterCardsCount: number;
+    starterTemplate: IResetter<MTemplate>;
+    deckTemplate: IResetter<MTemplate>;
 }
