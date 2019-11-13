@@ -6,13 +6,23 @@ How to deploy:
 
     git clone https://github.com/BirukovAleksandr48/ExplodingKittens.git
     cd ./ExplodingKittens/
-    docker-compose -f docker-compose.dev.yml build
-    docker-compose -f docker-compose.dev.yml up
+    //Docker version: 18.09.6
+    //docker-compose version: 1.24.0
+    sh ./commands/deploy-dev.sh
+    sh ./commands/up-dev.sh
 
-When deploying for the first time, all dependencies must be installed.
+Next time:
 
-    docker-compose -f docker-compose.dev.yml exec backend-dev npm i
+    sh ./commands/up-dev.sh
 
-For test backend open *SocketIO Client Tool* in several incognitoo tabs
+To open a terminal in a container:
+
+    sh ./commands/exec-dev.sh
+
+To add new dependencies:
+
+    sh ./commands/install-dev.sh [arguments]
+
+For test backend open *SocketIO Client Tool* in several incognito tabs
 
 [http://amritb.github.io/socketio-client-tool/#url=bG9jYWxob3N0OjMwMDA=&opt=&events=](http://amritb.github.io/socketio-client-tool/#url=bG9jYWxob3N0OjMwMDA=&opt=&events=)
