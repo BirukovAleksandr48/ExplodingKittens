@@ -17,6 +17,7 @@ export default class BecomeOnline implements INotifier {
             hostId: g.hostId,
             maxPlayers: g.rules.maxPlayers,
             participants: g.participants,
+            status: g.status,
         }));
 
         socketServer.to(this.user.id).emit('become_online/you', { games });

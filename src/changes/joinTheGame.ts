@@ -19,6 +19,7 @@ export default class JoinTheGame implements INotifier {
             hostId: this.game.hostId,
             maxPlayers: this.game.rules.maxPlayers,
             participants: this.game.participants,
+            status: this.game.status,
         };
 
         socketServer.sockets.sockets[this.user.id]

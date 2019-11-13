@@ -2,7 +2,7 @@ import { IGame } from '../models/game';
 import { MUser } from '../models/user';
 import { INotifier } from '../models/notifier';
 import { IActionHandler } from '../models/actionHandler';
-import Joi from '@hapi/joi';
+import * as Joi from '@hapi/joi';
 import { GameStarted } from '../changes';
 import errors from '../errors';
 import { MCurrent } from '../models/current';

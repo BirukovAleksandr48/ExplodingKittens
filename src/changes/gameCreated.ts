@@ -15,6 +15,7 @@ export default class GameCreated implements INotifier {
             hostId: this.game.hostId,
             maxPlayers: this.game.rules.maxPlayers,
             participants: this.game.participants,
+            status: this.game.status,
         };
 
         socketServer.to('GAME_FINDERS')

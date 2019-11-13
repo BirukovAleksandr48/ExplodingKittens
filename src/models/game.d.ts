@@ -52,4 +52,5 @@ export type MBaseGameInfo = {
     maxPlayers: number,
     participants: MGameParticipant[],
     hostId: string,
+    status: number,
 };
