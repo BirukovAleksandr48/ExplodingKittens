@@ -92,3 +92,4 @@ typings/
 .idea
 
 /backend/public/
+.coverage
